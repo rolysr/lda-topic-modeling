@@ -1,0 +1,4 @@
+gensim==4.3.1
+matplotlib==3.7.1
+nltk==3.8.1
+numpy==1.25.0
