@@ -11,7 +11,7 @@ from nltk.corpus import stopwords
 nltk.download('stopwords')
 
 texts=[]
-file = open("TokenVieuxN.txt", "r")
+file = open("datasets/TokenVieuxN.txt", "r")
 lines = file.readlines()
 file.close()
 

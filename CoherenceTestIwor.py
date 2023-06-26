@@ -12,7 +12,7 @@ import numpy as np
 nltk.download('stopwords')
 
 texts=[]
-file = open("TokenVieuxM.txt", "r")
+file = open("datasets/TokenVieuxM.txt", "r")
 lines = file.readlines()
 file.close()
 
