@@ -1,32 +1,46 @@
-import re
-import nltk
+import nltk, re
 from nltk.corpus import stopwords
 from gensim.models import LdaModel
 from collections import defaultdict
+from nltk.stem import WordNetLemmatizer
 from gensim.models import CoherenceModel
 from gensim.corpora.dictionary import Dictionary
 
+# load corpus
 nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
 print()
 
 texts=[]
 
 # Load document
-file = open("datasets/TokenVieuxM.txt", "r")
+file = open("datasets/TokenVieuxN.txt", "r")
 lines = file.readlines()
 file.close()
 
+# Initialize lemmatizer
+lemmer = WordNetLemmatizer()
+
 for line in lines:
   # Parsing text and removing unwanted characters
-  line = re.findall(r"[a-zA-Z]+", line)
+  line = re.findall(r"[\w]+", line)
 
   # Remove stopwords  
   words = [word for word in line if not word in stopwords.words()]
 
-  texts.append(words)
+  # Function to test if something is a noun
+  is_noun = lambda pos: pos[:2] == 'NN'
+
+  # Tag the tokens with POS tags
+  nouns = [ lemmer.lemmatize(word)
+    for (word, pos) in nltk.pos_tag(words) if is_noun(pos)] 
+
+  texts.append(nouns)
 
 # Here set the number of topics(to be changed if necessary)
-nb=10
+nb=15
   
 id2word = Dictionary(texts)
 corpus = [id2word.doc2bow(text) for text in texts]
@@ -38,7 +52,7 @@ lda = LdaModel(
   passes=1000,
   alpha='auto', 
   eta='auto',
-  decay=0.5, 
+  decay=0.25, 
   offset=1.0
 )
 
@@ -59,9 +73,6 @@ print(f'Perplexity = {perplexity_lda}')
 coherence_model_lda = CoherenceModel(model=lda, texts=texts, dictionary=id2word, coherence='c_v')
 coherence_lda = coherence_model_lda.get_coherence()
 print(f'Coherence = {coherence_lda}\n')
-
-# Find the most typical document for each topic
-# additional import
 
 # Compute topic proportions for each document
 doc_topics = lda.get_document_topics(corpus, minimum_probability=0)
