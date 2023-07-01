@@ -16,7 +16,7 @@ print()
 texts=[]
 
 # Load document
-file = open("datasets/TokenVieuxN.txt", "r")
+file = open("datasets/TokenVieuxM.txt", "r")
 lines = file.readlines()
 file.close()
 
@@ -40,7 +40,7 @@ for line in lines:
   texts.append(nouns)
 
 # Here set the number of topics(to be changed if necessary)
-nb=15
+nb=10
   
 id2word = Dictionary(texts)
 corpus = [id2word.doc2bow(text) for text in texts]
@@ -52,7 +52,7 @@ lda = LdaModel(
   passes=1000,
   alpha='auto', 
   eta='auto',
-  decay=0.25, 
+  decay=0.5, 
   offset=1.0
 )
 
